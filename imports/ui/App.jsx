@@ -2,12 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
-
 import { Tasks } from '../api/tasks.js';
-
 import Task from './Task.jsx';
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
 import Papa from 'papaparse';
+import Popup from 'react-popup';
 
 // App component - represents the whole app
 class App extends Component {
@@ -56,6 +55,21 @@ class App extends Component {
       });
   }
 
+  handleImportButton() {
+    importform = (<form className="parseUpload" onSubmit={this.handleImportSubmit.bind(this)} >
+
+      <input
+        type="file"
+        ref="fileInput"
+      />
+      <button>
+        submit
+      </button>
+    </form>);
+    alert('import form goes here ' + importform);
+
+  }
+
   renderTasks() {
     let filteredTasks = this.props.tasks;
     if (this.state.hideCompleted) {
@@ -95,13 +109,28 @@ class App extends Component {
            <AccountsUIWrapper />
 
            { this.props.currentUser ?
-             <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-               <input
-                 type="text"
-                 ref="textInput"
-                 placeholder="Type to add new tasks"
-               />
-             </form> : ''
+             <div>
+               <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+                 <input
+                   type="text"
+                   ref="textInput"
+                   placeholder="Type to add new tasks"
+                 />
+               </form>
+               <button onClick={this.handleImportButton.bind(this)}> Import </button>
+
+
+               <form className="parseUpload" onSubmit={this.handleImportSubmit.bind(this)} >
+
+                 <input
+                   type="file"
+                   ref="fileInput"
+                 />
+                 <button>
+                   submit
+                 </button>
+               </form>
+             </div> : ''
            }
         </header>
 
@@ -109,22 +138,7 @@ class App extends Component {
           {this.renderTasks()}
         </ul>
 
-        <div>
-          <br />
-          <br />
-          <form className="parseUpload" onSubmit={this.handleImportSubmit.bind(this)} >
-            <input
-              type="file"
-              ref="fileInput"
-            />
-            <button>
-              submit
-            </button>
-          </form>
 
-
-
-        </div>
       </div>
     );
   }
