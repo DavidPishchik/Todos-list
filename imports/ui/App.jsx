@@ -70,6 +70,22 @@ class App extends Component {
 
   }
 
+  handleExportButton() {
+    let data = this.props.tasks;
+    let downloadCSV = function(csv) {
+  		var blob = new Blob([csv]);
+  		var a = window.document.createElement("a");
+  	    a.href = window.URL.createObjectURL(blob, {type: "text/plain"});
+  	    a.download = "tasks.csv";
+  	    document.body.appendChild(a);
+  	    a.click();
+  	    document.body.removeChild(a);
+  	}
+
+    var csv = Papa.unparse(data);
+    downloadCSV(csv);
+  }
+
   renderTasks() {
     let filteredTasks = this.props.tasks;
     if (this.state.hideCompleted) {
@@ -119,6 +135,7 @@ class App extends Component {
                </form>
                <button onClick={this.handleImportButton.bind(this)}> Import </button>
 
+               <button onClick={this.handleExportButton.bind(this)}> Export </button>
 
                <form className="parseUpload" onSubmit={this.handleImportSubmit.bind(this)} >
 
